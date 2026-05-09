@@ -1,0 +1,28 @@
+export const citadelVault = {
+  "Daily Adhkar": [
+    { title: "Morning Protection", arabic: "بِسْمِ اللَّهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَىْءٌ فِي الأَرْضِ وَلاَ فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillahil-ladhi la yadurru ma'as-mihi shai'un fil-ardi wa la fis-sama'i, wa Huwas-Sami'ul-'Alim", english: "In the Name of Allah with Whose Name there is protection against every kind of harm in the earth or in the heaven, and He is the All-Hearing and All-Knowing.", reference: "Abu Dawud & Tirmidhi" },
+    { title: "Evening Reliance", arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ", transliteration: "Amsayna wa amsal-mulku lillah, walhamdu lillah, la ilaha illallah, wahdahu la sharika lah", english: "We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner.", reference: "Sahih Muslim" },
+    { title: "Seeking Forgiveness (Sayyid al-Istighfar)", arabic: "اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ", transliteration: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduk", english: "O Allah, You are my Lord, there is none worthy of worship but You. You created me and I am Your slave.", reference: "Sahih al-Bukhari" }
+  ],
+  "Emotions & Hardships": [
+    { title: "When Feeling Anxious or Sad", arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ", transliteration: "Allahumma inni a'udhu bika minal-hammi wal-hazani, wal-'ajzi wal-kasali, wal-bukhli wal-jubni, wa dala'id-dayni wa ghalabatir-rijal", english: "O Allah, I seek refuge in You from anxiety and sorrow, weakness and laziness, miserliness and cowardice, the burden of debts and from being overpowered by men.", reference: "Sahih al-Bukhari" },
+    { title: "When Facing a Difficult Task", arabic: "اللَّهُمَّ لاَ سَهْلَ إِلاَّ مَا جَعَلْتَهُ سَهْلاً، وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلاً", transliteration: "Allahumma la sahla illa ma ja'altahu sahlan, wa anta taj'alul-hazna idha shi'ta sahlan", english: "O Allah, there is no ease except in that which You have made easy, and You make the difficulty, if You wish, easy.", reference: "Ibn Hibban" },
+    { title: "For Grief and Distress", arabic: "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ، اللَّهُمَّ أْجُرْنِي فِي مُصِيبَتِي وَأَخْلِفْ لِي خَيْرًا مِنْهَا", transliteration: "Inna lillahi wa inna ilayhi raji'un. Allahumma-jurni fi musibati wa akhlif li khayran minha", english: "To Allah we belong and unto Him is our return. O Allah, recompense me for my affliction and replace it for me with something better.", reference: "Sahih Muslim" }
+  ],
+  "The Rabbana Du'as": [
+    { title: "For Good in Both Worlds", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan waqina 'adhaban-nar", english: "Our Lord, give us in this world [that which is] good and in the Hereafter [that which is] good and protect us from the punishment of the Fire.", reference: "Surah Al-Baqarah 2:201" },
+    { title: "For Patience and Victory", arabic: "رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا وَانصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ", transliteration: "Rabbana afrigh 'alayna sabran wa thabbit aqdamana wansurna 'alal-qawmil-kafirin", english: "Our Lord, pour upon us patience and plant firmly our feet and give us victory over the disbelieving people.", reference: "Surah Al-Baqarah 2:250" },
+    { title: "Seeking Mercy and Forgiveness", arabic: "رَبَّنَا ظَلَمْنَا أَنفُسَنَا وَإِن لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ", transliteration: "Rabbana zhalamna anfusana wa in lam taghfir lana wa tarhamna lanakunanna minal-khasirin", english: "Our Lord, we have wronged ourselves, and if You do not forgive us and have mercy upon us, we will surely be among the losers.", reference: "Surah Al-A'raf 7:23" }
+  ],
+  "Everyday Routines": [
+    { title: "Waking Up", arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ", transliteration: "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur", english: "All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection.", reference: "Sahih al-Bukhari" },
+    { title: "Leaving the Restroom", arabic: "غُفْرَانَكَ", transliteration: "Ghufranaka", english: "I ask You (Allah) for forgiveness.", reference: "Abu Dawud" }
+  ],
+  "Travel & Protection": [
+    { title: "Leaving the House", arabic: "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ", transliteration: "Bismillahi, tawakkaltu 'alal-lahi, wa la hawla wa la quwwata illa billah", english: "In the name of Allah, I place my trust in Allah, and there is no might nor power except with Allah.", reference: "Abu Dawud" }
+  ],
+  "Prophetic Wisdom": [
+    { title: "The Best of Deeds", arabic: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ", transliteration: "Innamal-a'malu bin-niyyat", english: "Verily, deeds are only with intentions.", reference: "Sahih al-Bukhari 1" },
+    { title: "On Character", arabic: "خِيَارُكُمْ أَحَاسِنُكُمْ أَخْلاَقًا", transliteration: "Khiyarukum ahasinukum akhlaqa", english: "The best among you are those who have the best manners and character.", reference: "Sahih al-Bukhari" }
+  ]
+};

@@ -2,15 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-// Adjusting path to look inside src/data
-import hadithData from '../data/hadith.json';
 
 export default function InspirationPage() {
   const [dailyHadith, setDailyHadith] = useState(null);
 
   useEffect(() => {
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    setDailyHadith(hadithData[dayOfYear % hadithData.length]);
+    async function fetchHadith() {
+      try {
+        const response = await fetch('/hadith.json');
+        const hadithData = await response.json();
+        const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+        setDailyHadith(hadithData[dayOfYear % hadithData.length]);
+      } catch (error) {
+        console.error("Failed to fetch hadith:", error);
+      }
+    }
+    fetchHadith();
   }, []);
 
   return (

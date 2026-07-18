@@ -4,19 +4,16 @@ import { useEffect } from 'react';
 
 export default function PwaRegistry() {
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(
-          function(registration) {
-            console.log('Background Engine Registered Successfully.');
-          },
-          function(err) {
-            console.log('Background Engine Registration Failed: ', err);
-          }
-        );
-      });
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('✅ Citadel Vault (Service Worker) Active:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('❌ Service Worker Registration Failed:', error);
+        });
     }
   }, []);
 
-  return null; // This component is invisible
+  return null; // This component is invisible, it just runs the background logic
 }

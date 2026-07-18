@@ -1,18 +1,55 @@
 @import "tailwindcss";
 
 @theme {
-  /* This tells Tailwind v4 to generate all the bg-brand-terracotta and text-brand-terracotta classes automatically */
-  --color-brand-cream: #FDFBF7;
-  --color-brand-terracotta: #E2725B;
-  --color-brand-dark: #2A2A2A;
-  
-  /* Link our custom fonts */
-  --font-heading: var(--font-playfair);
-  --font-arabic: var(--font-amiri);
-  --font-sans: var(--font-inter);
+  /* Phase 1: Deep Teal & Mint Theme Variables */
+  --color-brand-primary: #097063;
+  --color-brand-surface: #E8F5F1;
+  --color-brand-accent: #F3AA60;
+  --color-brand-dark: #111827;
+  --color-brand-light: #FFFFFF;
+
+  /* Font Variables */
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Playfair Display", serif;
+  --font-arabic: "Amiri", serif;
 }
 
-body {
-  background-color: var(--color-brand-cream);
-  color: var(--color-brand-dark);
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  /* The Ornamental Islamic Border Engine */
+  .border-ornate {
+    position: relative;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(9, 112, 99, 0.15);
+    border-radius: 0.75rem;
+  }
+  
+  .border-ornate::before,
+  .border-ornate::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: radial-gradient(circle at center, transparent 40%, rgba(9, 112, 99, 0.4) 41%, rgba(9, 112, 99, 0.4) 50%, transparent 51%);
+    pointer-events: none;
+  }
+  
+  .border-ornate::before { top: -4px; left: -4px; }
+  .border-ornate::after { bottom: -4px; right: -4px; }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #097063; border-radius: 10px; opacity: 0.5; }

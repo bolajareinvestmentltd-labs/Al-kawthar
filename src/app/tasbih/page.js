@@ -3,147 +3,163 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export default function TasbihPage() {
-  const [count, setCount] = useState(0);
-  const [sessionTitle, setSessionTitle] = useState('');
-  const [logs, setLogs] = useState([]);
+const defaultLogs = [
+  { id: '1', title: 'Subhanallah', count: 0, target: 33 },
+  { id: '2', title: 'Alhamdulillah', count: 0, target: 33 },
+  { id: '3', title: 'Allahu Akbar', count: 0, target: 33 },
+  { id: '4', title: 'Istighfar', count: 0, target: 100 },
+];
 
-  // 1. ENGINE START: Load saved logs from the phone's memory when the page opens
+export default function TasbihPage() {
+  const [logs, setLogs] = useState([]);
+  const [activeLogId, setActiveLogId] = useState('1');
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // 1. Load the Spiritual Ledger and PATCH old data
   useEffect(() => {
     const savedLogs = localStorage.getItem('kawthar_tasbih_logs');
     if (savedLogs) {
-      setLogs(JSON.parse(savedLogs));
+      // Data Migration: Ensure old memory gets the new 'target' property
+      const parsedLogs = JSON.parse(savedLogs).map(log => ({
+        ...log,
+        target: log.target || 33 
+      }));
+      setLogs(parsedLogs);
+    } else {
+      setLogs(defaultLogs);
     }
+    setIsLoaded(true);
   }, []);
 
-  const handleTap = () => setCount(prev => prev + 1);
-  const handleReset = () => setCount(0);
+  // 2. Save to memory whenever logs change
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('kawthar_tasbih_logs', JSON.stringify(logs));
+    }
+  }, [logs, isLoaded]);
 
-  // 2. THE SAVE ENGINE: Package the data, save it to the phone, and update the UI
-  const handleSaveLog = () => {
-    if (count === 0) return; // Prevent saving empty sessions
+  if (!isLoaded) return null;
 
-    // Create a beautifully formatted timestamp (e.g., "May 8, 3:26 AM")
-    const timeStamp = new Intl.DateTimeFormat('en-US', { 
-      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true 
-    }).format(new Date());
+  const activeLog = logs.find(log => log.id === activeLogId) || logs[0];
+  const safeTarget = activeLog.target || 33; // Fallback math protection
 
-    const newLog = {
-      id: Date.now(), // Unique ID for each session
-      title: sessionTitle.trim() === '' ? 'Dhikr Session' : sessionTitle,
-      count: count,
-      time: timeStamp
-    };
+  const handleTap = () => {
+    if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
+      if ((activeLog.count + 1) % safeTarget === 0) {
+        window.navigator.vibrate([50, 50, 50]); 
+      } else {
+        window.navigator.vibrate(10);
+      }
+    }
 
-    // Add the new log to the top of the list
-    const updatedLogs = [newLog, ...logs];
-    
-    setLogs(updatedLogs);
-    localStorage.setItem('kawthar_tasbih_logs', JSON.stringify(updatedLogs));
-
-    // Reset the counter and input field so they can start fresh
-    setCount(0);
-    setSessionTitle('');
+    setLogs(logs.map(log => 
+      log.id === activeLogId ? { ...log, count: log.count + 1 } : log
+    ));
   };
 
-  // 3. THE DELETE ENGINE: Remove a specific log if the user wants to clear it
-  const handleDeleteLog = (idToRemove) => {
-    const updatedLogs = logs.filter(log => log.id !== idToRemove);
-    setLogs(updatedLogs);
-    localStorage.setItem('kawthar_tasbih_logs', JSON.stringify(updatedLogs));
+  const handleReset = () => {
+    if (confirm(`Are you sure you want to reset your count for ${activeLog.title}?`)) {
+      setLogs(logs.map(log => 
+        log.id === activeLogId ? { ...log, count: 0 } : log
+      ));
+    }
   };
+
+  // Safe SVG Ring Math
+  const radius = 120;
+  const circumference = 2 * Math.PI * radius;
+  const currentLapProgress = activeLog.count % safeTarget;
+  const fillPercentage = activeLog.count === 0 ? 0 : 
+    (currentLapProgress === 0 ? 100 : (currentLapProgress / safeTarget) * 100);
+  const strokeDashoffset = circumference - (fillPercentage / 100) * circumference;
 
   return (
-    <main className="min-h-screen py-8 px-4 max-w-md mx-auto relative bg-brand-cream flex flex-col items-center">
+    <main className="min-h-screen bg-brand-surface flex flex-col items-center py-8 px-4 font-sans fade-in pb-32">
       
-      <header className="mb-8 flex items-center w-full relative h-10">
-        <Link href="/" className="absolute left-0 text-brand-terracotta hover:text-brand-dark transition p-2 z-10">
+      {/* Header */}
+      <header className="w-full flex items-center justify-between mb-8 max-w-md">
+        <Link href="/" className="text-brand-primary p-2 hover:bg-brand-primary/10 rounded-full transition">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
         </Link>
-        <h1 className="font-heading text-2xl font-bold text-brand-terracotta absolute w-full text-center">
-          Digital Tasbih
-        </h1>
+        <h1 className="font-heading text-2xl font-bold text-brand-primary">التسبيح</h1>
+        <div className="w-10"></div>
       </header>
 
-      {/* Session Naming Input */}
-      <div className="w-full max-w-xs mb-8">
-        <input 
-          type="text" 
-          placeholder="Name this session (e.g. Morning Istighfar)" 
-          value={sessionTitle}
-          onChange={(e) => setSessionTitle(e.target.value)}
-          className="w-full text-center bg-transparent border-b-2 border-brand-terracotta/30 focus:border-brand-terracotta outline-none py-2 font-sans text-lg text-brand-dark placeholder:text-gray-400 placeholder:text-sm transition-colors"
-        />
-      </div>
-
-      {/* The Main Counter Display */}
-      <div className="font-sans text-brand-dark text-8xl font-bold mb-10 tracking-wider">
-        {count}
-      </div>
-
-      {/* The Giant Tap Button */}
-      <button 
-        onClick={handleTap}
-        className="w-64 h-64 rounded-full bg-brand-terracotta text-white shadow-[0_10px_20px_rgba(226,114,91,0.3)] flex items-center justify-center active:scale-95 active:shadow-inner transition-all duration-150 relative overflow-hidden group mb-10 focus:outline-none"
-      >
-        <div className="absolute inset-0 bg-white opacity-0 group-active:opacity-10 transition-opacity"></div>
-        <span className="font-sans font-bold text-3xl uppercase tracking-widest">Tap</span>
-      </button>
-
-      {/* Control Buttons */}
-      <div className="flex gap-4 w-full px-4 justify-center">
-        <button 
-          onClick={handleReset}
-          className="px-6 py-3 rounded-full border border-gray-300 text-gray-500 font-sans text-sm font-bold hover:bg-white hover:border-brand-terracotta hover:text-brand-terracotta transition-colors w-1/3"
-        >
-          Reset
-        </button>
-        <button 
-          onClick={handleSaveLog}
-          className={`px-6 py-3 rounded-full shadow-md font-sans text-sm font-bold transition-all w-2/3 flex justify-center items-center gap-2 ${count > 0 ? 'bg-brand-dark text-white hover:bg-opacity-90' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
-          Save Log
-        </button>
-      </div>
-
-      {/* The Live Saved Sessions Log */}
-      <div className="w-full mt-12 pt-6 border-t border-brand-terracotta/20">
-        <h3 className="font-sans font-bold text-gray-500 text-xs mb-4 uppercase tracking-widest px-2">
-          Saved Logs {logs.length > 0 && `(${logs.length})`}
-        </h3>
+      <div className="max-w-md w-full flex flex-col items-center flex-1">
         
-        <div className="flex flex-col gap-3">
-          {logs.length === 0 ? (
-            <p className="text-center text-sm text-gray-400 italic mt-4">Your saved sessions will appear here.</p>
-          ) : (
-            logs.map((log) => (
-              <div key={log.id} className="bg-white p-4 rounded-xl border border-brand-terracotta/10 flex justify-between items-center shadow-sm relative group overflow-hidden fade-in">
-                
-                <div className="flex-1 pr-4">
-                  <p className="font-bold text-brand-dark text-sm truncate">{log.title}</p>
-                  <p className="text-xs text-gray-400 mt-1">{log.time}</p>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="bg-brand-cream border border-brand-terracotta/20 text-brand-terracotta font-bold px-4 py-1.5 rounded-full text-sm">
-                    {log.count}
-                  </div>
-                  {/* Subtle Delete Button */}
-                  <button 
-                    onClick={() => handleDeleteLog(log.id)}
-                    className="text-gray-300 hover:text-red-500 transition-colors p-1"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                  </button>
-                </div>
-
-              </div>
-            ))
-          )}
+        {/* The Ledger Selector */}
+        <div className="w-full bg-white p-2 rounded-2xl shadow-sm border border-brand-primary/10 mb-12 flex overflow-x-auto hide-scrollbar">
+          {logs.map(log => (
+            <button
+              key={log.id}
+              onClick={() => setActiveLogId(log.id)}
+              className={`whitespace-nowrap px-6 py-3 rounded-xl font-bold text-sm transition-all flex-1 ${
+                activeLogId === log.id 
+                  ? 'bg-brand-primary text-white shadow-md scale-95' 
+                  : 'text-brand-primary/60 hover:bg-brand-surface'
+              }`}
+            >
+              {log.title}
+            </button>
+          ))}
         </div>
-      </div>
 
+        {/* The Interactive Circular Tasbih */}
+        <div 
+          onClick={handleTap}
+          className="relative w-72 h-72 flex items-center justify-center cursor-pointer active:scale-95 transition-transform duration-100 group select-none touch-manipulation"
+        >
+          {/* Background Ambient Glow */}
+          <div className="absolute inset-0 bg-brand-primary/5 rounded-full blur-2xl group-hover:bg-brand-primary/10 transition-colors"></div>
+          
+          {/* SVG Progress Ring */}
+          <svg className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none">
+            <circle 
+              cx="144" cy="144" r={radius} 
+              fill="transparent" 
+              stroke="rgba(9, 112, 99, 0.1)" 
+              strokeWidth="16" 
+            />
+            <circle 
+              cx="144" cy="144" r={radius} 
+              fill="transparent" 
+              stroke="#F3AA60" 
+              strokeWidth="16" 
+              strokeLinecap="round"
+              style={{
+                strokeDasharray: circumference,
+                strokeDashoffset: strokeDashoffset,
+                transition: 'stroke-dashoffset 0.3s ease-in-out'
+              }}
+            />
+          </svg>
+
+          {/* Center Data */}
+          <div className="flex flex-col items-center text-center z-10 pointer-events-none">
+            <span className="text-6xl font-bold text-brand-primary tracking-tighter drop-shadow-sm mb-1">
+              {activeLog.count.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest text-brand-primary/50 font-bold">
+              Target: {safeTarget}
+            </span>
+          </div>
+        </div>
+
+        <p className="mt-8 text-sm text-brand-primary/60 text-center px-8">
+          Tap anywhere on the circle to count. The golden ring will reset every {safeTarget} recitations.
+        </p>
+
+        {/* Controls */}
+        <div className="mt-12 flex gap-6">
+          <button 
+            onClick={handleReset}
+            className="w-14 h-14 bg-white border border-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center shadow-sm hover:shadow-md hover:border-brand-primary/30 transition-all active:scale-90"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          </button>
+        </div>
+
+      </div>
     </main>
   );
 }

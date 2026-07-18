@@ -1,25 +1,29 @@
+const CACHE_NAME = 'al-kawthar-v3';
+const ASSETS = [
+  '/',
+  '/manifest.json',
+  '/hadith.json',
+  '/_next/static/css/app/layout.css',
+];
+
 self.addEventListener('install', (event) => {
-  console.log('Al-Kawthar Service Worker Installing...');
   self.skipWaiting();
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
 
-self.addEventListener('activate', (event) => {
-  console.log('Al-Kawthar Service Worker Activated!');
-});
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
 
-// This is the engine that catches the "Mega Vault" quote and pushes it to the lock screen
-self.addEventListener('push', (event) => {
-  const data = event.data ? event.data.json() : { title: 'Al-Kawthar', body: 'Time for daily Dhikr.' };
-  
-  const options = {
-    body: data.body,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    vibrate: [100, 50, 100], // A gentle double-buzz for the notification
-    requireInteraction: true // Keeps it on the lock screen until they glance at it!
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
+  // Cache-First for static assets, API data, and audio files
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
+        if (networkResponse.status === 200) {
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse.clone()));
+        }
+        return networkResponse;
+      });
+      return cachedResponse || fetchPromise;
+    })
   );
 });

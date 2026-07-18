@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-// Using relative path to ensure resolution
-import hadithData from '../../data/hadith.json';
+// Adjusting path to look inside src/data
+import hadithData from '../data/hadith.json';
 
 export default function InspirationPage() {
   const [dailyHadith, setDailyHadith] = useState(null);

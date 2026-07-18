@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import hadithData from '@/data/hadith.json';
+// Using relative path to ensure resolution
+import hadithData from '../../data/hadith.json';
 
 export default function InspirationPage() {
   const [dailyHadith, setDailyHadith] = useState(null);
 
   useEffect(() => {
-    // Logic to select hadith
     const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
     setDailyHadith(hadithData[dayOfYear % hadithData.length]);
   }, []);

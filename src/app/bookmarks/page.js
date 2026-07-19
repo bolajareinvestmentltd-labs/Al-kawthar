@@ -40,9 +40,54 @@ export default function BookmarksPage() {
     fetchBookmarks();
   }, []);
 
+  let content;
+
+  if (loading) {
+    content = (
+      <p className="text-center font-sans text-brand-terracotta animate-pulse">Loading saved verses...</p>
+    );
+  } else if (errorMessage) {
+    content = (
+      <div className="text-center mt-20">
+        <svg className="w-16 h-16 mx-auto text-brand-terracotta/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 11-12.728 0 9 9 0 0112.728 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16h.01" /></svg>
+        <p className="font-sans text-gray-500">{errorMessage}</p>
+      </div>
+    );
+  } else if (bookmarks.length === 0) {
+    content = (
+      <div className="text-center mt-20">
+        <svg className="w-16 h-16 mx-auto text-brand-terracotta/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 11-12.728 0 9 9 0 0112.728 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16h.01" /></svg>
+        <p className="font-sans text-gray-500">No bookmarks yet. Save a verse to see it here.</p>
+      </div>
+    );
+  } else {
+    content = (
+      <div className="flex flex-col gap-4">
+        {bookmarks.map((bookmark) => (
+          <Link 
+            href={`/surah/${bookmark.chapter_id}`} 
+            key={bookmark.id}
+            className="bg-white border border-brand-terracotta/20 rounded-xl p-5 flex items-center justify-between hover:border-brand-terracotta hover:shadow-sm transition-all group"
+          >
+            <div>
+              <p className="font-heading font-bold text-brand-dark text-lg mb-1">
+                Surah {bookmark.chapter_id}
+              </p>
+              <p className="font-sans text-sm text-gray-500">
+                Verse {bookmark.verse_number}
+              </p>
+            </div>
+            <div className="text-brand-terracotta group-hover:translate-x-1 transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            </div>
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <main className="min-h-screen py-8 px-4 max-w-md mx-auto relative bg-brand-cream">
-      
       <header className="mb-10 flex items-center relative h-10">
         <Link href="/" className="absolute left-0 text-brand-terracotta hover:text-brand-dark transition p-2 z-10">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
@@ -52,36 +97,7 @@ export default function BookmarksPage() {
         </h1>
       </header>
 
-      {loading ? (
-        <p className="text-center font-sans text-brand-terracotta animate-pulse">Loading saved verses...</p>
-      ) : errorMessage ? (
-        <div className="text-center mt-20">
-          <svg className="w-16 h-16 mx-auto text-brand-terracotta/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 11-12.728 0 9 9 0 0112.728 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16h.01" /></svg>
-          <p className="font-sans text-gray-500">{errorMessage}</p>
-        </div>
-      ) : bookmarks.length === 0 ? (
-        <div className="flex flex-col gap-4">
-          {bookmarks.map((bookmark) => (
-            <Link 
-              href={`/surah/${bookmark.chapter_id}`} 
-              key={bookmark.id}
-              className="bg-white border border-brand-terracotta/20 rounded-xl p-5 flex items-center justify-between hover:border-brand-terracotta hover:shadow-sm transition-all group"
-            >
-              <div>
-                <p className="font-heading font-bold text-brand-dark text-lg mb-1">
-                  Surah {bookmark.chapter_id}
-                </p>
-                <p className="font-sans text-sm text-gray-500">
-                  Verse {bookmark.verse_number}
-                </p>
-              </div>
-              <div className="text-brand-terracotta group-hover:translate-x-1 transition-transform">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      {content}
     </main>
   );
 }

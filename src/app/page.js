@@ -5,15 +5,28 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [countdown, setCountdown] = useState('03:09:56');
+  const [today, setToday] = useState(new Date());
 
-  // A live ticker for the UI scaffold
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
       setCountdown(`03:09:${(59 - (now.getSeconds() % 60)).toString().padStart(2, '0')}`);
+      setToday(now);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const weekday = today.toLocaleDateString('en-US', { weekday: 'long' });
+  const longDate = today.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+  const hijriDate = today.toLocaleDateString('ar-SA-u-ca-islamic', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
     <main className="min-h-screen bg-brand-surface flex flex-col font-sans fade-in pb-24">
@@ -35,23 +48,25 @@ export default function Home() {
 
         {/* The Live Prayer Countdown */}
         <div className="mt-6 flex flex-col items-center relative z-10">
-          <div className="w-40 h-40 rounded-full border-4 border-brand-surface/20 flex flex-col items-center justify-center bg-brand-primary shadow-inner relative">
-            <div className="absolute inset-0 rounded-full border border-brand-accent/30 animate-[ping_4s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
-            <span className="text-sm text-brand-surface mb-1 font-arabic font-bold">صلاة الظهر بعد</span>
-            <span className="text-2xl font-bold font-sans tracking-widest text-brand-accent drop-shadow-md">{countdown}</span>
+          <div className="w-full max-w-sm rounded-[40px] border-4 border-brand-surface/20 bg-brand-primary p-6 shadow-inner sm:p-8">
+            <div className="absolute inset-0 rounded-[40px] border border-brand-accent/30 opacity-60"></div>
+            <div className="relative flex flex-col items-center gap-3">
+              <span className="text-sm text-brand-surface mb-1 font-arabic font-bold">صلاة الظهر بعد</span>
+              <span className="text-3xl font-bold font-sans tracking-widest text-brand-accent drop-shadow-md">{countdown}</span>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 flex justify-between items-center text-[10px] sm:text-xs font-bold text-brand-surface/90 bg-black/20 py-2.5 px-4 rounded-xl relative z-10 uppercase tracking-wider backdrop-blur-sm">
-           <span>Friday</span>
-           <span>22 May 2026</span>
-           <span className="font-arabic font-normal tracking-normal text-sm">5 ذو القعدة 1447</span>
+        <div className="mt-8 grid gap-2 rounded-xl bg-black/20 px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-brand-surface/90 backdrop-blur-sm sm:grid-cols-3">
+           <span>{weekday}</span>
+           <span>{longDate}</span>
+           <span className="font-arabic font-normal tracking-normal text-sm">{hijriDate}</span>
         </div>
       </div>
 
       {/* 2. The 3-Column Tool Grid */}
       <div className="flex-1 px-4 -mt-8 relative z-20">
-         <div className="grid grid-cols-3 gap-3">
+         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <GridItem href="/read" title="القرآن الكريم" subtitle="Al-Quran" />
             <GridItem href="/inspiration" title="أذكار المسلم" subtitle="Daily Adhkar" />
             <GridItem href="/tasbih" title="التسبيح" subtitle="Tasbih" />

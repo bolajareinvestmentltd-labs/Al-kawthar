@@ -13,7 +13,7 @@ export default function SurahReader({ verses, chapterId }) {
   const router = useRouter(); // Initialize the router
 
   const currentVerse = currentIndex >= 0 ? verses[currentIndex] : null;
-  const audioUrl = currentVerse?.audio?.url ? `https://verses.quran.com/${currentVerse.audio.url}` : null;
+  const audioUrl = currentVerse?.audio?.url ? currentVerse.audio.url : currentVerse?.audio || null;
 
   useEffect(() => {
     if (currentIndex >= 0 && verseRefs.current[currentIndex]) {
@@ -71,7 +71,7 @@ export default function SurahReader({ verses, chapterId }) {
     <div className="flex flex-col gap-6 items-center w-full">
       <div className="sticky top-4 z-50 bg-brand-cream/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-sm border border-brand-terracotta/20 flex items-center justify-between w-[96%] max-w-md">
         <span className="font-sans font-bold text-brand-dark text-sm truncate pr-4">
-          {currentIndex >= 0 ? `Playing Verse ${verses[currentIndex].verse_key}` : "Ready to Listen"}
+          {currentIndex >= 0 ? `Playing Verse ${verses[currentIndex].verse_number}` : 'Ready to Listen'}
         </span>
         <button 
           onClick={toggleMasterPlay}

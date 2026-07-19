@@ -25,7 +25,7 @@ export default function RootLayout({
       </head>
       <body className="bg-brand-surface antialiased">
         <AudioProvider>
-          <div className="w-full h-full min-h-[100dvh] max-w-md mx-auto bg-brand-surface relative shadow-2xl overflow-x-hidden flex flex-col">
+          <div className="w-full min-h-[100dvh] max-w-screen-2xl mx-auto bg-brand-surface relative overflow-x-hidden flex flex-col">
             <div className="flex-1 flex flex-col pb-36"> {/* space for floating nav + mini player */}
               {children}
             </div>

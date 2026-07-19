@@ -2,19 +2,24 @@ import surahIndex from '../data/surah-meta.json';
 
 // The Live Quran API Engine
 export async function getFullSurah(surahNumber) {
-  const surahId = Number(surahNumber);
-  if (!Number.isFinite(surahId) || surahId < 1 || surahId > 114) {
-    return null;
-  }
+    const surahId = Number(surahNumber);
+  const fallbackId = Number.isFinite(surahId) && surahId >= 1 && surahId <= 114 ? surahId : null;
 
   try {
+    const idToFetch = fallbackId ?? 1;
     const res = await fetch(
-      `https://api.alquran.cloud/v1/surah/${surahId}/editions/quran-uthmani,en.sahih,ar.alafasy`,
+      `https://api.alquran.cloud/v1/surah/${idToFetch}/editions/quran-uthmani,en.sahih,ar.alafasy`,
       { next: { revalidate: 300 } }
     );
     const data = await res.json();
 
     if (data.code !== 200 || !Array.isArray(data.data) || data.data.length < 3) {
+      console.error('Quran API invalid response', {
+        status: res.status,
+        statusText: res.statusText,
+        body: data,
+        requestedSurah: idToFetch,
+      });
       throw new Error('Invalid Quran API response');
     }
 

@@ -4,28 +4,31 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
-  const [countdown, setCountdown] = useState('03:09:56');
-  const [today, setToday] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const now = new Date();
-      setCountdown(`03:09:${(59 - (now.getSeconds() % 60)).toString().padStart(2, '0')}`);
-      setToday(now);
+      setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const weekday = today.toLocaleDateString('en-US', { weekday: 'long' });
-  const longDate = today.toLocaleDateString('en-US', {
+  const weekday = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
+  const longDate = currentTime.toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   });
-  const hijriDate = today.toLocaleDateString('ar-SA-u-ca-islamic', {
+  const hijriDate = currentTime.toLocaleDateString('ar-SA-u-ca-islamic', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+  });
+  const clock = currentTime.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
   });
 
   return (
@@ -51,8 +54,8 @@ export default function Home() {
           <div className="w-full max-w-sm rounded-[40px] border-4 border-brand-surface/20 bg-brand-primary p-6 shadow-inner sm:p-8">
             <div className="absolute inset-0 rounded-[40px] border border-brand-accent/30 opacity-60"></div>
             <div className="relative flex flex-col items-center gap-3">
-              <span className="text-sm text-brand-surface mb-1 font-arabic font-bold">صلاة الظهر بعد</span>
-              <span className="text-3xl font-bold font-sans tracking-widest text-brand-accent drop-shadow-md">{countdown}</span>
+              <span className="text-sm text-brand-surface mb-1 font-arabic font-bold">Current Time</span>
+              <span className="text-3xl font-bold font-sans tracking-widest text-brand-accent drop-shadow-md">{clock}</span>
             </div>
           </div>
         </div>

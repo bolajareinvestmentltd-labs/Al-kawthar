@@ -1,16 +1,22 @@
 import SurahReader from '../../../components/SurahReader';
 import { getFullSurah } from '../../../lib/api';
 import Link from 'next/link';
+import offlineSurahs from '../../../data/surah-meta.json';
 
 export default async function SurahPage({ params }) {
   const surahId = Number(params?.id);
-  const surah = await getFullSurah(surahId);
+  const remoteSurah = await getFullSurah(params?.id);
+  const offlineSurah = Number.isFinite(surahId)
+    ? offlineSurahs.find((surah) => surah.number === surahId)
+    : null;
+
+  const surah = remoteSurah ?? (offlineSurah ? { ...offlineSurah, verses: [] } : null);
 
   if (!surah) {
     return (
       <div className="min-h-screen bg-brand-surface flex flex-col items-center justify-center fade-in px-4 text-center">
-        <p className="font-bold text-brand-primary uppercase tracking-widest text-xs mb-4">Failed to load Surah {isNaN(surahId) ? '' : surahId}.</p>
-        <p className="max-w-md text-sm text-slate-600 mb-6">The Quran API response was unavailable. Please refresh or try another Surah.</p>
+        <p className="font-bold text-brand-primary uppercase tracking-widest text-xs mb-4">Failed to load Surah.</p>
+        <p className="max-w-md text-sm text-slate-600 mb-6">The requested Surah is not available. Please return to the list and choose a valid chapter.</p>
         <Link href="/read" className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-primary/20">Back to Surah list</Link>
       </div>
     );

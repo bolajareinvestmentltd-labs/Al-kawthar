@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 
-export default function VerseCard({ verse, isActive, onPlay }) {
+export default function VerseCard({ verse, isActive, onPlayToggle, verseRef }) {
   const [showTranslation, setShowTranslation] = useState(true);
   const [showTransliteration, setShowTransliteration] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   return (
     <div 
+      ref={verseRef}
       id={`verse-${verse.verse_number}`}
       className={`p-6 rounded-2xl shadow-sm border mb-6 relative transition-all duration-500 ${
         isActive 
@@ -25,7 +26,7 @@ export default function VerseCard({ verse, isActive, onPlay }) {
           
           {/* Local Play Button for this specific verse */}
           <button 
-            onClick={onPlay}
+            onClick={onPlayToggle}
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold font-sans transition-colors ${isActive ? 'bg-brand-terracotta text-white' : 'bg-brand-cream text-brand-terracotta hover:bg-brand-terracotta hover:text-white'}`}
           >
             {isActive ? (

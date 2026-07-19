@@ -3,13 +3,15 @@ import { getFullSurah } from '../../../lib/api';
 import Link from 'next/link';
 
 export default async function SurahPage({ params }) {
-  const surahId = params?.id;
+  const surahId = Number(params?.id);
   const surah = await getFullSurah(surahId);
 
   if (!surah) {
     return (
-      <div className="min-h-screen bg-brand-surface flex flex-col items-center justify-center fade-in">
-        <p className="font-bold text-brand-primary uppercase tracking-widest text-xs">Failed to load Surah.</p>
+      <div className="min-h-screen bg-brand-surface flex flex-col items-center justify-center fade-in px-4 text-center">
+        <p className="font-bold text-brand-primary uppercase tracking-widest text-xs mb-4">Failed to load Surah {isNaN(surahId) ? '' : surahId}.</p>
+        <p className="max-w-md text-sm text-slate-600 mb-6">The Quran API response was unavailable. Please refresh or try another Surah.</p>
+        <Link href="/read" className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-primary/20">Back to Surah list</Link>
       </div>
     );
   }
@@ -29,7 +31,15 @@ export default async function SurahPage({ params }) {
         </div>
       </div>
 
-      <SurahReader verses={surah.verses} chapterId={surahId} />
+      {surah.verses?.length ? (
+        <SurahReader verses={surah.verses} chapterId={surahId} />
+      ) : (
+        <div className="mt-10 max-w-md mx-auto rounded-3xl bg-white p-6 shadow-lg border border-brand-primary/10 text-center">
+          <p className="text-brand-dark font-semibold text-lg">Surah metadata loaded successfully.</p>
+          <p className="mt-3 text-sm text-slate-600">Verse data is temporarily unavailable. Please refresh this page or try again in a moment.</p>
+          <Link href="/read" className="inline-flex mt-5 rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white">Browse Surah list</Link>
+        </div>
+      )}
     </main>
   );
 }

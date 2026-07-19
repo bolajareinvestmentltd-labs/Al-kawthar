@@ -38,8 +38,14 @@ export function AudioProvider({ children }) {
 
   const safePlay = () => {
     if (!audioRef.current || !audioRef.current.src) return;
-    audioRef.current.play().catch(e => console.warn("Playback error:", e));
+    audioRef.current.play().catch(e => console.warn('Playback error:', e));
     setIsPlaying(true);
+  };
+
+  const seek = (percentage) => {
+    if (!audioRef.current || !Number.isFinite(audioRef.current.duration)) return;
+    const targetTime = (audioRef.current.duration * percentage) / 100;
+    audioRef.current.currentTime = targetTime;
   };
 
   const playTrack = (track, newQueue = [], startIndex = 0) => {
@@ -72,8 +78,14 @@ export function AudioProvider({ children }) {
 
   return (
     <AudioContext.Provider value={{
-      isPlaying, currentTrack, progress,
-      playTrack, togglePlay, playNext, setQueue
+      isPlaying,
+      currentTrack,
+      progress,
+      playTrack,
+      togglePlay,
+      playNext,
+      setQueue,
+      seek
     }}>
       <audio ref={audioRef} src={currentTrack?.url || ''} preload="auto" />
       {children}

@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useGlobalAudio } from '../../context/AudioProvider';
 
+const safeBars = [1, 2, 3, 4, 5];
+
 const listenVault = [
   { id: 1, title: 'Surah Al-Fatiha', subtitle: 'Mishary Rashid Alafasy', url: 'https://everyayah.com/data/Alafasy_128kbps/001001.mp3' },
   { id: 2, title: 'Ayatul Kursi', subtitle: 'Sheikh Noreen Siddiq', url: 'https://everyayah.com/data/Noreen_Siddiq_128kbps/002255.mp3' }, 
@@ -48,12 +50,12 @@ export default function ListenPage() {
         </p>
 
         <div className="flex gap-1.5 mt-6 h-6 items-end">
-          {[1, 2, 3, 4, 5].map((bar) => (
+          {safeBars.map((bar) => (
             <div 
               key={bar} 
               className={`w-1.5 bg-white rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-pulse' : 'h-1'}`}
               style={{ 
-                height: isPlaying ? `${Math.max(20, Math.random() * 100)}%` : '4px',
+                height: isPlaying ? `${Math.max(20, 70)}%` : '4px',
                 animationDelay: `${bar * 0.15}s` 
               }}
             ></div>

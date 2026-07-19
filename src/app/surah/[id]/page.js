@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getFullSurah } from '../../../lib/api';
 import { useGlobalAudio } from '../../../context/AudioProvider';
 
 export default function SurahPage({ params }) {
-  const unwrappedParams = use(params);
-  const surahId = unwrappedParams.id;
+  const surahId = params?.id;
 
   const [surah, setSurah] = useState(null);
   const [loading, setLoading] = useState(true);

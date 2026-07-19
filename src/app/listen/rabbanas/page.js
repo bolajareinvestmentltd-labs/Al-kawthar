@@ -71,7 +71,10 @@ export default function RabbanaPlaylist() {
   };
 
   const validateUrl = async (id, url) => {
-    if (!url) return setValidateStatus(prev => ({ ...prev, [id]: 'empty' }));
+    if (!url) {
+      setValidateStatus(prev => ({ ...prev, [id]: 'empty' }));
+      return;
+    }
     try {
       setValidateStatus(prev => ({ ...prev, [id]: 'checking' }));
       const res = await fetch(url, { method: 'HEAD' });
@@ -92,6 +95,8 @@ export default function RabbanaPlaylist() {
     if (!ts || !ts.length) return '—';
     return ts.slice(0,5).join(', ')+(ts.length>5? ' …':'');
   };
+
+  return (
     <main className="min-h-screen bg-brand-surface font-sans fade-in pb-32">
       
       {/* Header */}

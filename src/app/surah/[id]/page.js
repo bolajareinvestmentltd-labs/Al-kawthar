@@ -4,8 +4,10 @@ import Link from 'next/link';
 import offlineSurahs from '../../../data/surah-meta.json';
 
 export default async function SurahPage({ params }) {
-  const surahId = Number(params?.id);
-  const remoteSurah = await getFullSurah(params?.id);
+  const resolvedParams = await params;
+  const surahKey = resolvedParams?.id;
+  const surahId = Number(surahKey);
+  const remoteSurah = await getFullSurah(surahKey);
   const offlineSurah = Number.isFinite(surahId)
     ? offlineSurahs.find((surah) => surah.number === surahId)
     : null;
